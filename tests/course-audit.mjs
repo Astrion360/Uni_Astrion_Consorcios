@@ -46,9 +46,11 @@ for(const module of enhanced.modules) {
 }
 const html=read('index.html');
 for(const file of ['masters-a-v4.js','masters-b-v4.js','masters-c-v4.js','review-v4.js'])assert.ok(html.includes(file),'Falta include '+file);
-const found=html.match(/<script id="unia-course-engine" type="application\\/json">([\\s\\S]*?)<\\/script>/);
-assert.ok(found,'Motor do curso ausente');
-const engine=JSON.parse(found[1]);
+const openTag='<script id="unia-course-engine" type="application/json">';
+const begin=html.indexOf(openTag);
+const finish=html.indexOf('</script>',begin);
+assert.ok(begin>=0&&finish>begin,'Motor do curso ausente');
+const engine=JSON.parse(html.slice(begin+openTag.length,finish));
 new Script(engine,{filename:'academic-engine.js'});
 assert.ok(engine.includes("moduleDone(m)===m.lessons.length"),'Teste de módulo sem bloqueio');
 assert.ok(engine.includes('qa-stack'),'Perguntas e respostas sem formatação');
