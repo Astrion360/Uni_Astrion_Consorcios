@@ -1,0 +1,24 @@
+name: Auditoria acadêmica UniAstrion
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'curriculum/**'
+      - 'tests/course-audit.mjs'
+      - '.github/workflows/academic-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter repositório
+        uses: actions/checkout@v4
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar estrutura do curso
+        run: node tests/course-audit.mjs
