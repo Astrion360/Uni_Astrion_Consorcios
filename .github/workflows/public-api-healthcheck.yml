@@ -1,0 +1,22 @@
+name: Testar conectividade pública UniAstrion
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tests/public-api-healthcheck.mjs'
+      - '.github/workflows/public-api-healthcheck.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-healthcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter código
+        uses: actions/checkout@v4
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar CORS e endpoint público
+        run: node tests/public-api-healthcheck.mjs
