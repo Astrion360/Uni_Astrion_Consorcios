@@ -134,6 +134,9 @@ async function api(action,payload={}){
   if(error){
     let msg=error.message || 'Falha na comunicação.';
     try{const x=await error.context?.json?.();if(x?.error)msg=x.error;}catch{}
+    if(/failed to send a request|failed to fetch|networkerror|load failed|network request failed/i.test(msg)){
+      msg='Não foi possível concluir a comunicação com a UniAstrion. Atualize a página e tente novamente. Se persistir, escreva para academia@astrion360.com.br.';
+    }
     throw new Error(msg);
   }
   if(data?.error)throw new Error(data.error);
