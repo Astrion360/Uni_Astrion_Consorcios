@@ -37,3 +37,19 @@ assert.equal(response.headers.get('Access-Control-Allow-Origin'),origin,'Origem 
 const data=JSON.parse(raw);
 assert.equal(data.valid,false,'Código fictício não deve validar certificado real');
 console.log('POST autenticado por chave publicável: OK. Endpoint de matrícula acessível sem criar registros.');
+const invalidApplication=await fetch(url,{
+  method:'POST',
+  headers:{
+    'Origin':origin,
+    'Content-Type':'application/json',
+    'apikey':key,
+    'Authorization':'Bearer '+key,
+    'x-client-info':'uni-astrion-e2e'
+  },
+  body:JSON.stringify({action:'apply',full_name:'Teste Técnico',email:'nao-e-um-email',privacy_accepted:false})
+});
+const invalidBody=await invalidApplication.json();
+assert.equal(invalidApplication.status,400,'Validação de matrícula inválida deve rejeitar sem cadastrar');
+assert.ok(invalidBody.error?.includes('e-mail'),'Retorno da validação de matrícula inesperado');
+assert.equal(invalidApplication.headers.get('Access-Control-Allow-Origin'),origin);
+console.log('Rota de matrícula: OK, dados inválidos rejeitados sem inserir candidatos.');
