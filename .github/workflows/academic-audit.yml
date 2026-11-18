@@ -6,6 +6,7 @@ on:
       - 'index.html'
       - 'curriculum/**'
       - 'tests/course-audit.mjs'
+      - 'tests/editorial-audit-v5.mjs'
       - '.github/workflows/academic-audit.yml'
   workflow_dispatch:
 permissions:
@@ -22,3 +23,5 @@ jobs:
           node-version: '22'
       - name: Validar estrutura do curso
         run: node tests/course-audit.mjs
+      - name: Validar edição visual e estudos de caso
+        run: node tests/editorial-audit-v5.mjs
